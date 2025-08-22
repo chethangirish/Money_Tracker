@@ -5,6 +5,7 @@ import 'package:money_tracker/dashboard.dart'; // contains DashboardPage
 
 void main() {
   runApp(const MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

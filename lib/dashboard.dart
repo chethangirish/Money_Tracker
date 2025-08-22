@@ -65,70 +65,104 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent dismiss by tapping outside
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: const Text(
-            'Logout',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: const Text(
-            'Are you sure you want to logout from your account?',
-            style: TextStyle(color: Colors.grey),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                // Navigate to login page
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              child: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    
-    switch (index) {
-      case 0:
-        // Dashboard - stay on current page
-        break;
-      case 1:
-        // Navigate to Analytics
-        Navigator.pushNamed(context, '/analytics');
-        break;
-      case 2:
-        // Show logout dialog
-        _showLogoutDialog();
-        break;
+    if (index == 2) {
+      _showLogoutConfirmation();
     }
+  }
+
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents closing by tapping outside
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: const Color(0xFF2A2A2A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: const BorderSide(color: Color(0xFF404040), width: 1),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Are you sure you want to logout?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          // Reset the selected index since user cancelled
+                          setState(() {
+                            _selectedIndex = 0;
+                          });
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF404040),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/login',
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Yes',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _deleteTransaction(String transactionId) {
@@ -321,231 +355,6 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _addTransaction() {
-    final titleController = TextEditingController();
-    final amountController = TextEditingController();
-    String selectedType = 'Expense';
-    String selectedCategory = 'Food';
-    String selectedPaymentMethod = 'Cash';
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF1E1E1E),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              title: const Text(
-                'Add New Transaction',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: titleController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        labelText: 'Transaction Title',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: amountController,
-                      keyboardType: TextInputType.number,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        labelText: 'Amount (₹)',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: selectedType,
-                      dropdownColor: const Color(0xFF1E1E1E),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        labelText: 'Transaction Type',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green),
-                        ),
-                      ),
-                      items: ['Income', 'Expense'].map((value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setDialogState(() {
-                          selectedType = newValue!;
-                          // Auto-adjust category based on type
-                          if (selectedType == 'Income') {
-                            selectedCategory = 'Salary';
-                          } else {
-                            selectedCategory = 'Food';
-                          }
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: selectedCategory,
-                      dropdownColor: const Color(0xFF1E1E1E),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green),
-                        ),
-                      ),
-                      items: ['Food', 'Travel', 'Rent', 'Salary', 'Other']
-                          .map((value) => DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              ))
-                          .toList(),
-                      onChanged: (newValue) {
-                        setDialogState(() => selectedCategory = newValue!);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: selectedPaymentMethod,
-                      dropdownColor: const Color(0xFF1E1E1E),
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        labelText: 'Payment Method',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green),
-                        ),
-                      ),
-                      items: ['Cash', 'Online', 'Card', 'UPI']
-                          .map((value) => DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              ))
-                          .toList(),
-                      onChanged: (newValue) {
-                        setDialogState(() => selectedPaymentMethod = newValue!);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (titleController.text.trim().isNotEmpty &&
-                        amountController.text.trim().isNotEmpty) {
-                      // Validate amount is a valid number
-                      final amount = double.tryParse(amountController.text.trim());
-                      if (amount == null || amount <= 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please enter a valid amount'),
-                            backgroundColor: Colors.red,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        return;
-                      }
-
-                      // Generate new transaction
-                      final newTransaction = {
-                        "id": DateTime.now().millisecondsSinceEpoch.toString(),
-                        "title": titleController.text.trim(),
-                        "subtitle": "$selectedPaymentMethod . ${DateTime.now().day} ${_getMonthName(DateTime.now().month)} ${DateTime.now().year}",
-                        "amount": "${selectedType == 'Income' ? '+' : '-'}₹${amountController.text.trim()}",
-                        "color": selectedType == 'Income' ? Colors.green : Colors.red,
-                        "icon": _getIconFromCategory(selectedCategory),
-                      };
-
-                      setState(() {
-                        _allTransactions.insert(0, newTransaction); // Add to top of list
-                      });
-
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${selectedType == 'Income' ? 'Income' : 'Expense'} added successfully'),
-                          backgroundColor: Colors.green,
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please fill in all required fields'),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    'Add Transaction',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  String _getMonthName(int month) {
-    const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return months[month];
-  }
-
   String _getCategoryFromIcon(String iconPath) {
     if (iconPath.contains('Food')) return 'Food';
     if (iconPath.contains('Travel')) return 'Travel';
@@ -660,7 +469,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         horizontal: screenWidth * 0.04,
                       ),
                     ),
-                    onPressed: _addTransaction, // Call the add transaction function
+                    onPressed: () {},
                     icon: Icon(Icons.add, color: Colors.green, size: screenWidth * 0.05),
                     label: Text(
                       "Add",
