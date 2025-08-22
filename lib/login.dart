@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -14,26 +16,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/bg.jpg"), 
-            fit: BoxFit.cover, 
+            image: AssetImage("assets/images/bg.jpg"),
+            fit: BoxFit.cover,
           ),
         ),
-
         child: Center(
           child: Container(
             height: 400,
-            padding: EdgeInsets.all(28),
-            margin: EdgeInsets.symmetric(horizontal: 34),
+            padding: const EdgeInsets.all(28),
+            margin: const EdgeInsets.symmetric(horizontal: 34),
             decoration: BoxDecoration(
-              color: Color(0xFF161A20),
+              color: const Color(0xFF161A20),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   "Login",
                   style: TextStyle(
                     color: Colors.white,
@@ -41,34 +42,35 @@ class _LoginPageState extends State<LoginPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 45),
+                const SizedBox(height: 45),
 
+                // Email
                 TextField(
                   controller: emailController,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Email",
-                    hintStyle: TextStyle(color: const Color(0xFFFFFFFF)),
+                    hintStyle: const TextStyle(color: Colors.white),
                     filled: true,
-                    fillColor: Color(0xFF1D2B3B),
+                    fillColor: const Color(0xFF1D2B3B),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-            
+                // Password
                 TextField(
                   controller: passwordController,
                   obscureText: _obscurePassword,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Password",
-                    hintStyle: TextStyle(color: const Color(0xFFFFFFFF)),
+                    hintStyle: const TextStyle(color: Colors.white),
                     filled: true,
-                    fillColor: Color(0xFF1D2B3B),
+                    fillColor: const Color(0xFF1D2B3B),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -88,17 +90,18 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 34),
+                const SizedBox(height: 34),
 
+                // Login Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      backgroundColor: Color(0xFF3C4D4D),
+                      backgroundColor: const Color(0xFF3C4D4D),
                     ),
                     onPressed: () {
                       String email = emailController.text.trim();
@@ -107,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (email.isEmpty || password.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
+                            content: const Text(
                               "Please enter email and password",
                               style: TextStyle(
                                 color: Colors.white,
@@ -116,22 +119,23 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             backgroundColor: Colors.orangeAccent,
                             behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(16),
+                            margin: const EdgeInsets.all(16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            duration: Duration(seconds: 3),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
                         return;
                       }
 
                       if (email == "test@gmail.com" && password == "123456") {
-                        Navigator.pushReplacementNamed(context, '/analytics');
+                        // ✅ Navigate to Dashboard instead of Analytics
+                        Navigator.pushReplacementNamed(context, '/dashboard');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
+                            content: const Text(
                               "Invalid email or password",
                               style: TextStyle(
                                 color: Colors.white,
@@ -140,11 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             backgroundColor: Colors.redAccent,
                             behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(16),
+                            margin: const EdgeInsets.all(16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            duration: Duration(seconds: 3),
+                            duration: const Duration(seconds: 3),
                             action: SnackBarAction(
                               label: 'Retry',
                               textColor: Colors.yellow,
@@ -156,8 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       }
                     },
-
-                    child: Text(
+                    child: const Text(
                       "Login",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),

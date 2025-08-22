@@ -1,16 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class AnalyticsPage extends StatelessWidget {
+class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({Key? key}) : super(key: key);
 
   @override
+  State<AnalyticsPage> createState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends State<AnalyticsPage> {
+  int _selectedIndex = 1; // Set to 1 since this is the analytics page
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismiss by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E1E1E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text(
+            'Logout',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: const Text(
+            'Are you sure you want to logout from your account?',
+            style: TextStyle(color: Colors.grey),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                // Navigate to login page
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    
+    switch (index) {
+      case 0:
+        // Navigate to Dashboard
+        Navigator.pushReplacementNamed(context, '/dashboard');
+        break;
+      case 1:
+        // Analytics - stay on current page
+        break;
+      case 2:
+        // Show logout dialog
+        _showLogoutDialog();
+        break;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text("Analytics Dashboard"),
+        title: const Text(
+          "Analytics Dashboard",
+          style: TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: false, // Remove back button
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
@@ -163,7 +243,6 @@ class AnalyticsPage extends StatelessWidget {
 
             const Text(
               "Daily Expenses",
-
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -302,6 +381,38 @@ class AnalyticsPage extends StatelessWidget {
             const SizedBox(height: 80),
           ],
         ),
+      ),
+      
+      /// Bottom Navigation Bar
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/window.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.grey),
+            activeIcon: SvgPicture.asset("assets/window.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.green),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/graph.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.grey),
+            activeIcon: SvgPicture.asset("assets/graph.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.green),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/logout.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.grey),
+            activeIcon: SvgPicture.asset("assets/logout.svg",
+                height: screenWidth * 0.06, width: screenWidth * 0.06, color: Colors.green),
+            label: "",
+          ),
+        ],
       ),
     );
   }

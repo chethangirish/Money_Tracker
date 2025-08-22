@@ -1,37 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/analytics.dart';
-import 'package:money_tracker/login.dart';
-// import 'login.dart'; // Import the login page file
-// import 'analytics.dart'; // Import the analytics page file
+import 'package:money_tracker/login.dart'; // contains LoginPage
+import 'package:money_tracker/dashboard.dart'; // contains DashboardPage
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,  // removes the debug banner
-      title: 'Login Demo',
+      debugShowCheckedModeBanner: false, // removes the debug banner
+      title: 'Money Tracker',
       theme: ThemeData.dark(), // optional dark theme
-      home: LoginPage(), // Set LoginPage as the home screen
-      // home: AnalyticsPage(), // Set LoginPage as the home screen
+      home: const LoginPage(), // Start with LoginPage
       routes: {
-        // '/dashboard': (context) => DashboardPage(), // Example route
-        '/analytics': (context) => AnalyticsPage(), // Route to AnalyticsPage
+        '/dashboard': (context) => const DashboardPage(),
+        '/analytics': (context) => const AnalyticsPage(),
+        '/login': (context) => const LoginPage(),
       },
-    );
-  }
-}
-
-// Example Dashboard Page (you can replace this later with your actual screen)
-class DashboardPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Dashboard")),
-      body: Center(child: Text("Welcome to Dashboard!")),
     );
   }
 }
